@@ -202,7 +202,7 @@ const BenefitsComponent: FC = () => {
                     {benefit.description}
                   </Typography>
                 </div>
-              </div>
+            </div>
             </Card>
           ))}
         </div>

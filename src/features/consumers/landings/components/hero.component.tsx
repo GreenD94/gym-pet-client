@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const HeroComponent: React.FC = () => {
   return (
-    <section className="relative min-h-screen bg-background-primary">
+    <section className="relative min-h-screen bg-background-primary pt-16">
       {/* Background Image with overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center"
