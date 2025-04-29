@@ -33,6 +33,12 @@ export interface RegisterParams {
   roleId?: number;
 }
 
+export interface TokenPayload {
+  userId: string;
+  email: string;
+  roleId: number;
+}
+
 export enum AuthError {
   USER_NOT_FOUND = 'User not found',
   INVALID_PASSWORD = 'Invalid password',
