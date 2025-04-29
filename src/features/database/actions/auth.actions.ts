@@ -6,7 +6,7 @@ import { Role } from '../types/role';
 import { User } from '../models/user.types';
 import { TokenService } from '../services/token.service';
 import { ValidationService } from '../services/validation.service';
-import { AuthError, AuthResponse, LoginParams, LoginSuccessData, RegisterParams } from '../types/auth.types';
+import { AuthError, AuthResponse, LoginParams, LoginSuccessData, RegisterParams, ValidateSuccessData } from '../types/auth.types';
 
 /**
  * Handles user login authentication
@@ -40,9 +40,9 @@ export async function loginUser({ email, password }: LoginParams): Promise<AuthR
       roleId
     });
 
-    // Create a new object without the password field
+    // Create a plain object without the password field and convert ObjectId to string
     const userData = {
-      _id: user._id,
+      _id: user._id.toString(),
       email: user.email,
       roleId: user.roleId
     };
@@ -111,6 +111,37 @@ export async function logoutUser(): Promise<AuthResponse> {
     return { success: true };
   } catch (error) {
     console.error('Logout error:', error);
+    return { success: false, message: AuthError.SERVER_ERROR };
+  }
+}
+
+/**
+ * Validates if a user exists in the database
+ */
+export async function validateUser(userId: string): Promise<AuthResponse<ValidateSuccessData>> {
+  try {
+    const db = await getDb();
+    const user = await db.collection<User>('users').findOne({ _id: userId });
+    
+    if (!user) {
+      return { 
+        success: false, 
+        message: AuthError.USER_NOT_FOUND 
+      };
+    }
+
+    return { 
+      success: true,
+      data: {
+        user: {
+          _id: user._id.toString(),
+          email: user.email,
+          roleId: user.roleId
+        }
+      }
+    };
+  } catch (error) {
+    console.error('User validation error:', error);
     return { success: false, message: AuthError.SERVER_ERROR };
   }
 } 

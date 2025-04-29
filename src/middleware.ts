@@ -1,21 +1,16 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
-import { Role } from './features/database/types/role';
+import { Role } from './features/auth/constants/roles';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+// Public routes that don't require authentication
+const publicRoutes = ['/login', '/register', '/blackbox'];
 
-// Define public routes that don't require authentication
-const publicRoutes = ['/login', '/blackbox', '/'];
-
-// Define role-based route prefixes
-const roleRoutes: Record<Role, string> = {
-  [Role.Admin]: '/admin',
-  [Role.Trainer]: '/trainer',
-  [Role.Consumer]: '/consumer',
-};
+// This will be printed when the middleware file is loaded
+console.log('🔄 Middleware file is being loaded');
 
 export async function middleware(request: NextRequest) {
+  const token = request.cookies.get('token')?.value;
   const { pathname } = request.nextUrl;
 
   // Allow public routes
@@ -23,61 +18,43 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Get token from cookies
-  const token = request.cookies.get('token')?.value;
-
-  // If no token and not a public route, redirect to login
+  // Check for token
   if (!token) {
-    const url = new URL('/login', request.url);
-    url.searchParams.set('from', pathname);
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   try {
     // Verify token
-    const { payload } = await jwtVerify(token, JWT_SECRET);
-    const roleId = payload.roleId as Role;
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(process.env.JWT_SECRET)
+    );
 
-    // Check if user has access to the requested route
-    const hasAccess = Object.entries(roleRoutes).some(([role, prefix]) => {
-      const roleNum = Number(role) as Role;
-      return roleId === roleNum && pathname.startsWith(prefix);
-    });
-
-    // If user doesn't have access, redirect to their role's home
-    if (!hasAccess) {
-      const homeRoute = roleRoutes[roleId] || '/';
-      return NextResponse.redirect(new URL(homeRoute, request.url));
+    // Check role-based access using only the token data
+    const userRole = payload.roleId as number;
+    if (pathname.startsWith('/admin') && userRole !== Role.Admin) {
+      return NextResponse.redirect(new URL('/no-permissions', request.url));
     }
 
-    // Add user info to request headers for use in API routes
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set('x-user-id', payload.userId as string);
-    requestHeaders.set('x-user-role', roleId.toString());
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+    return NextResponse.next();
   } catch {
-    // If token is invalid, clear it and redirect to login
+    // Clear invalid token
     const response = NextResponse.redirect(new URL('/login', request.url));
     response.cookies.delete('token');
     return response;
   }
 }
 
-// Configure which routes the middleware should run on
+// Match all paths except static files
 export const config = {
   matcher: [
     /*
-     * Match all request paths except:
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder
      */
-    '/((?!_next/static|_next/image|favicon.ico|public).*)',
-  ],
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ]
 }; 

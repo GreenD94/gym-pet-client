@@ -1,4 +1,26 @@
-import { User } from '../models/user.types';
+export interface AuthResponse<T = void> {
+  success: boolean;
+  message?: string;
+  data?: T;
+}
+
+export interface LoginSuccessData {
+  user: {
+    _id: string;
+    email: string;
+    roleId: number;
+  };
+  token: string;
+  roleId: number;
+}
+
+export interface ValidateSuccessData {
+  user: {
+    _id: string;
+    email: string;
+    roleId: number;
+  };
+}
 
 export interface LoginParams {
   email: string;
@@ -11,30 +33,12 @@ export interface RegisterParams {
   roleId?: number;
 }
 
-export interface AuthResponse<T = void> {
-  success: boolean;
-  message?: string;
-  data?: T;
-}
-
-export interface LoginSuccessData {
-  user: Omit<User, 'password'>;
-  token: string;
-  roleId: number;
-}
-
-export interface TokenPayload {
-  userId: string;
-  email: string;
-  roleId: number;
-}
-
 export enum AuthError {
-  USER_NOT_FOUND = 'Usuario no encontrado.',
-  INVALID_PASSWORD = 'Contraseña incorrecta.',
-  USER_EXISTS = 'El usuario ya existe.',
-  REGISTRATION_FAILED = 'Error al registrar usuario.',
-  SERVER_ERROR = 'Error interno del servidor.',
-  INVALID_EMAIL = 'El correo electrónico no es válido.',
-  WEAK_PASSWORD = 'La contraseña debe tener al menos 8 caracteres.',
+  USER_NOT_FOUND = 'User not found',
+  INVALID_PASSWORD = 'Invalid password',
+  USER_EXISTS = 'User already exists',
+  REGISTRATION_FAILED = 'Registration failed',
+  SERVER_ERROR = 'Server error',
+  INVALID_EMAIL = 'Invalid email',
+  WEAK_PASSWORD = 'Password must be at least 8 characters long',
 } 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { loginUser, registerUser } from '@/features/database/actions/auth.actions';
+import { loginUser, registerUser, logoutUser, validateUser } from '@/features/database/actions/auth.actions';
 import { seedDatabase } from '@/features/database/actions/seed.actions';
 import { Role } from '@/features/database/types/role';
 import { TestResult, BlackboxFormData } from '../types/blackbox.types';
@@ -11,6 +11,7 @@ export function useBlackbox() {
     registerEmail: '',
     registerPassword: '',
     registerRole: Role.Consumer,
+    validateUserId: '',
   });
   const [result, setResult] = useState<TestResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,6 +63,30 @@ export function useBlackbox() {
     }
   };
 
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      const response = await logoutUser();
+      setResult(response);
+    } catch (error) {
+      setResult({ error: error instanceof Error ? error.message : 'Unknown error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleValidate = async () => {
+    setLoading(true);
+    try {
+      const response = await validateUser(formData.validateUserId);
+      setResult(response);
+    } catch (error) {
+      setResult({ error: error instanceof Error ? error.message : 'Unknown error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     formData,
     result,
@@ -70,5 +95,7 @@ export function useBlackbox() {
     handleLogin,
     handleRegister,
     handleSeed,
+    handleLogout,
+    handleValidate,
   };
 } 

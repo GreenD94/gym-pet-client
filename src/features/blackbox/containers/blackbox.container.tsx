@@ -8,6 +8,8 @@ import { ActionInfo } from '../components/ActionInfo/ActionInfo';
 import { LoginForm } from '../components/Forms/LoginForm';
 import { RegisterForm } from '../components/Forms/RegisterForm';
 import { SeedForm } from '../components/Forms/SeedForm';
+import { LogoutForm } from '../components/Forms/LogoutForm';
+import { ValidateForm } from '../components/Forms/ValidateForm';
 import { Results } from '../components/Results/Results';
 import { BlackboxLayout } from '../components/Layout/BlackboxLayout';
 
@@ -22,6 +24,8 @@ function BlackboxContent() {
     handleLogin,
     handleRegister,
     handleSeed,
+    handleLogout,
+    handleValidate,
   } = useBlackboxContext();
 
   return (
@@ -67,6 +71,22 @@ function BlackboxContent() {
             <SeedForm
               loading={loading}
               onSubmit={handleSeed}
+            />
+          )}
+
+          {activeAction === 'logout' && (
+            <LogoutForm
+              loading={loading}
+              onSubmit={handleLogout}
+            />
+          )}
+
+          {activeAction === 'validate' && (
+            <ValidateForm
+              userId={formData.validateUserId}
+              loading={loading}
+              onUserIdChange={(value) => updateFormData({ validateUserId: value })}
+              onSubmit={handleValidate}
             />
           )}
 

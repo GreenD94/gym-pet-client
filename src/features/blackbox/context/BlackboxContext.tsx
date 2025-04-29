@@ -12,6 +12,8 @@ interface BlackboxContextType {
   handleLogin: () => Promise<void>;
   handleRegister: () => Promise<void>;
   handleSeed: () => Promise<void>;
+  handleLogout: () => Promise<void>;
+  handleValidate: () => Promise<void>;
 }
 
 const BlackboxContext = createContext<BlackboxContextType>({} as BlackboxContextType);

@@ -156,5 +156,46 @@ export const SERVER_ACTIONS_INFO: Record<string, ActionInfo> = {
         ]
       }
     ]
+  },
+  logout: {
+    title: 'Logout User',
+    description: 'Logs out the current user and invalidates their session',
+    requiredData: [],
+    returnType: 'AuthResponse',
+    databaseEntities: []
+  },
+  validate: {
+    title: 'Validate User',
+    description: 'Validates if a user exists in the database',
+    requiredData: [
+      {
+        name: 'userId',
+        type: 'string',
+        description: 'User\'s unique identifier'
+      }
+    ],
+    returnType: 'AuthResponse',
+    databaseEntities: [
+      {
+        name: 'User',
+        fields: [
+          {
+            name: 'id',
+            type: 'number',
+            description: 'Unique identifier'
+          },
+          {
+            name: 'email',
+            type: 'string',
+            description: 'User\'s email address'
+          },
+          {
+            name: 'roleId',
+            type: 'number',
+            description: 'Reference to user\'s role'
+          }
+        ]
+      }
+    ]
   }
 }; 
