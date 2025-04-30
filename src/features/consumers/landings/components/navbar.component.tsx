@@ -1,8 +1,10 @@
 import { FC, useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const NavbarComponent: FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,6 +14,10 @@ const NavbarComponent: FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLoginClick = () => {
+    router.push('/login');
+  };
 
   return (
     <nav
@@ -38,6 +44,7 @@ const NavbarComponent: FC = () => {
 
           {/* Login Button */}
           <button
+            onClick={handleLoginClick}
             className="bg-[#19b5e9] hover:bg-[#19b5e9]/90 text-white px-6 py-2 rounded-full text-sm font-medium transition-all"
           >
             Iniciar Sesión

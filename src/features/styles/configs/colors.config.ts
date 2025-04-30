@@ -5,8 +5,8 @@ export const colors = {
     secondary: '#f7f9fc',  // Secondary background (header, footer)
   },
   text: {
-    primary: '#f7f9fc',    // Main text color
-    secondary: '#f7f9fc',  // Secondary text color
+    primary: '#1a202c',    // Main text color (dark)
+    secondary: '#f7f9fc',  // Secondary text color (light)
   },
   accent: {
     primary: '#19b5e9',    // Cards and primary accent
@@ -22,7 +22,7 @@ export const colors = {
     trainer: {
       accent: '#f6ad55',   // Orange - Energetic and motivational
       background: '#f7fafc', // Clean background
-      text: '#2d3748',     // Dark text for readability
+      text: '#1a202c',     // Dark text for readability
       highlight: '#4299e1', // Blue for action items
     },
     consumer: {

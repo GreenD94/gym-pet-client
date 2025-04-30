@@ -6,6 +6,7 @@ import { loginUser } from '../../database/actions/auth.actions';
 import { Role } from '../../database/types/role';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { usePanel } from '../../styles/hooks/use-theme.hook';
 
 const LoginContainer: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ const LoginContainer: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { text } = usePanel('consumer');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +54,7 @@ const LoginContainer: React.FC = () => {
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-lg shadow-md w-full max-w-md"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center" style={{ color: text }}>Iniciar Sesión</h2>
         <Input
           type="email"
           label="Correo electrónico"
@@ -60,6 +62,7 @@ const LoginContainer: React.FC = () => {
           onChange={e => setEmail(e.target.value)}
           required
           fullWidth
+          style={{ color: text }}
         />
         <div className="mt-4" />
         <Input
@@ -69,6 +72,7 @@ const LoginContainer: React.FC = () => {
           onChange={e => setPassword(e.target.value)}
           required
           fullWidth
+          style={{ color: text }}
         />
         {error && (
           <div className="mt-4 text-red-600 text-sm text-center">{error}</div>
