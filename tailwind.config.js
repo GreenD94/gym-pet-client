@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -13,6 +14,10 @@ module.exports = {
         'background-secondary': '#f7f9fc',
         'accent-primary': '#19b5e9',
         'accent-secondary': '#f6ad55',
+        'text': {
+          'light': '#f7f9fc',
+          'dark': '#1a202c',
+        }
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
