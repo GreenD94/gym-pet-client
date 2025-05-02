@@ -1,25 +1,8 @@
-import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
-import { Role } from '@/features/database/types/role';
+
 import { LogoutButton } from '@/features/auth/components/logout-button.component';
 
 export default async function AdminHome() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  
-  if (!token) {
-    redirect('/login');
-  }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { roleId: number };
-    if (decoded.roleId !== Role.Admin) {
-      redirect('/login');
-    }
-  } catch {
-    redirect('/login');
-  }
 
   return (
     <div className="min-h-screen bg-gray-100">

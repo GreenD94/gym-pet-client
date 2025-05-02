@@ -5,14 +5,12 @@ import { Input } from '../../styles/components/input/input.component';
 import { loginUser } from '../../database/actions/auth.actions';
 import { Role } from '../../database/types/role';
 import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 
 const LoginContainer: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,15 +25,16 @@ const LoginContainer: React.FC = () => {
         
         if (token) {
           Cookies.set('token', token, { expires: 7, path: '/' });
+          Cookies.set('role', roleId.toString(), { expires: 7, path: '/' });
         }
         
         // Redirect based on roleId
         if (roleId === Role.Admin) {
-          router.push('/admin/home');
+          window.location.href = '/admin/home';
         } else if (roleId === Role.Trainer) {
-          router.push('/trainer/home');
+          window.location.href = '/trainer/home';
         } else {
-          router.push('/');
+          window.location.href = '/';
         }
       } else {
         setError(result.message || 'Error de autenticación.');
